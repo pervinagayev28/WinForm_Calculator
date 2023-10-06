@@ -278,6 +278,7 @@
             tboxscreen.Size = new Size(207, 54);
             tboxscreen.TabIndex = 1;
             tboxscreen.Text = "";
+            tboxscreen.TextChanged += tboxscreen_TextChanged;
             // 
             // label1
             // 
