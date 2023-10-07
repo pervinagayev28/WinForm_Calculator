@@ -223,12 +223,13 @@
             // button15
             // 
             button15.BackColor = Color.Crimson;
+            button15.Cursor = Cursors.No;
             button15.Font = new Font("Showcard Gothic", 16.2F, FontStyle.Bold, GraphicsUnit.Point);
             button15.Location = new Point(201, 529);
             button15.Name = "button15";
             button15.Size = new Size(70, 47);
             button15.TabIndex = 20;
-            button15.Text = "=";
+            button15.Text = ".";
             button15.UseVisualStyleBackColor = false;
             button15.Click += button15_Click;
             // 
@@ -318,6 +319,7 @@
             Controls.Add(button1);
             Name = "Form1";
             Text = "Form1";
+            Load += Form1_Load;
             panel1.ResumeLayout(false);
             ResumeLayout(false);
         }

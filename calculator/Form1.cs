@@ -1,3 +1,6 @@
+﻿using System;
+using System.IO;
+
 namespace calculator
 {
     public partial class Form1 : Form
@@ -116,8 +119,7 @@ namespace calculator
                 lbl_history.Text += "\n------------------\nResult: " + item.number + " - " + item.date.ToString("dd,MM,yyyy");
 
         }
-
-        private void button15_Click(object sender, EventArgs e)
+        private void CalculateResult()
         {
             List<int> X = new();
             List<int> divide = new();
@@ -125,7 +127,18 @@ namespace calculator
             string temp = default;
             foreach (var item in tboxscreen.Text)
             {
-                if (int.TryParse(item.ToString(), out _))
+                bool check = true;
+                try
+                {
+                    Convert.ToDouble(item.ToString());
+                    check = true;
+                }
+                catch (Exception)
+                {
+                    if (item.ToString() != ".")
+                        check = false;
+                }
+                if (check)
                 {
                     temp += item.ToString();
                 }
@@ -141,43 +154,49 @@ namespace calculator
             {
                 if (nums[i] == "X")
                 {
-                    X.Add(int.Parse(nums[i - 1]) * int.Parse(nums[i + 1]));
-                    nums.Insert(i - 1, X[X.Count - 1].ToString());
+                    var num = Convert.ToDouble(nums[i - 1]) * Convert.ToDouble(nums[i + 1]);
+                    nums.Insert(i - 1, num.ToString());
                     nums.RemoveRange(i, 3);
+                    i--;
                 }
-                else if (nums[i] == "/")
+                if (nums[i] == "/")
                 {
-                    divide.Add(int.Parse(nums[i - 1]) / int.Parse(nums[i + 1]));
-                    nums.Insert(i - 1, divide[divide.Count - 1].ToString());
+                    var num = Convert.ToDouble(nums[i - 1]) / Convert.ToDouble(nums[i + 1]);
+                    nums.Insert(i - 1, num.ToString());
                     nums.RemoveRange(i, 3);
                 }
             }
-            long result = default;
+            double result = default;
             for (int i = 0; i < nums.Count; i++)
             {
-                if (!int.TryParse(nums[i], out _))
-                {
-                    switch (nums[i])
-                    {
-                        case "+":
-                            if (i == 1)
-                                result = int.Parse(nums[i - 1]) + int.Parse(nums[i + 1]);
-                            else
-                                result += int.Parse(nums[i + 1]);
-                            break;
-                        case "-":
-                            if (i == 1)
-                                result = int.Parse(nums[i - 1]) - int.Parse(nums[i + 1]);
-                            else
-                                result -= int.Parse(nums[i + 1]);
-                            break;
-                    }
-                }
-            }
 
-            lbl_result.Text = result.ToString();
+                switch (nums[i])
+                {
+                    case "+":
+                        if (i == 1)
+                            result = Convert.ToDouble(nums[i - 1]) + Convert.ToDouble(nums[i + 1]);
+                        else
+                            result += Convert.ToDouble(nums[i + 1]);
+                        break;
+                    case "-":
+                        if (i == 1)
+                            result = Convert.ToDouble(nums[i - 1]) - Convert.ToDouble(nums[i + 1]);
+                        else
+                            result -= Convert.ToDouble(nums[i + 1]);
+                        break;
+                }
+
+            }
+            lbl_result.Text = Math.Round(result, 1).ToString();
+            if (nums.Count == 1)
+                lbl_result.Text = Math.Round(Convert.ToDouble(nums[0]), 1).ToString();
 
             history.Add(new History() { number = result.ToString(), date = DateTime.Now });
+        }
+        private void button15_Click(object sender, EventArgs e)
+        {
+            tboxscreen.Text += ".";
+
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -194,35 +213,51 @@ namespace calculator
 
         private void label1_Click_1(object sender, EventArgs e)
         {
-            try
-            {
-                if (tboxscreen.Text.Length > 0)
-                {
-                    string temp = tboxscreen.Text.Substring(0, tboxscreen.Text.Length - 1);
-                    tboxscreen.Text = temp;
-                }
-                else
-                {
-                    lbl_result.Text = "";
-                }
-            }
-            catch (Exception)
-            {
 
+            if (tboxscreen.Text.Length > 1)
+            {
+                string temp = tboxscreen.Text.Substring(0, tboxscreen.Text.Length - 1);
+                tboxscreen.Text = temp;
             }
-         
+            else
+            {
+                tboxscreen.Text = "";
+                lbl_result.Text = "";
+            }
+
+
         }
 
         private void tboxscreen_TextChanged(object sender, EventArgs e)
         {
-            if (check)
+
+            if (check && tboxscreen.Text.Length > 1)
             {
-                button15_Click(default, default);
+                CalculateResult();
                 check = false;
             }
-            if (tboxscreen.Text.Length != 1)
-                if (!int.TryParse(tboxscreen.Text[tboxscreen.Text.Length - 1].ToString(), out _))
-                    check = true;
+            if (tboxscreen.Text.Length > 1)
+            {
+
+                try
+                {
+                    Convert.ToDouble(tboxscreen.Text[tboxscreen.Text.Length - 1].ToString());
+                    var text = tboxscreen.Text;
+                    if(text.Contains("X")|| text.Contains("+")|| text.Contains("-")|| text.Contains("/"))
+                        CalculateResult();
+                }
+                catch (Exception)
+                {
+                    if (tboxscreen.Text[tboxscreen.Text.Length - 1].ToString() != ".")
+                        check = true;
+                }
+
+            }
+
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
 
         }
     }
