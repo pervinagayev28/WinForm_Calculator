@@ -243,7 +243,7 @@ namespace calculator
                 {
                     Convert.ToDouble(tboxscreen.Text[tboxscreen.Text.Length - 1].ToString());
                     var text = tboxscreen.Text;
-                    if(text.Contains("X")|| text.Contains("+")|| text.Contains("-")|| text.Contains("/"))
+                    if (text.Contains("X") || text.Contains("+") || text.Contains("-") || text.Contains("/"))
                         CalculateResult();
                 }
                 catch (Exception)

@@ -317,6 +317,7 @@
             Controls.Add(button3);
             Controls.Add(button2);
             Controls.Add(button1);
+            FormBorderStyle = FormBorderStyle.FixedToolWindow;
             Name = "Form1";
             Text = "Form1";
             Load += Form1_Load;
